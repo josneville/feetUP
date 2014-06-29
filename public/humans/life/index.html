@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+
+	    <title>FeetUP - New Homess Life</title>
+
+	    <!-- Bootstrap core CSS -->
+	    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+
+	    <!-- Icomoon CSS -->
+	    <link href="/assets/css/icomoon.css" rel="stylesheet">
+
+	    <!-- Custom Google Web Font -->
+	    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+
+	    <!-- Add custom CSS here -->
+
+	    <link href="/assets/css/bootstrapValidator.min.css" rel="stylesheet">
+	    <link href="/assets/css/landing-page.css" rel="stylesheet">
+
+
+	    <script type="text/javascript" src="/assets/js/angular.min.js"></script>
+	    <script>
+	    angular.module('homelessProfile', [])
+		  .controller('Controller', ['$scope', '$http', '$window', function($scope, $http, $window) {
+		  	$scope.person = {};
+		    $http({
+	            url: "/api/homeless/find",
+	            method: "POST",
+	            data: {homeless_id: "53afef289cc8f53ffa36823a"}
+        	}).success(function (data, status, headers, config) {
+                $scope.person = data; 
+            }).error(function (data, status, headers, config) {
+                $scope.status = status;
+            });
+		  }])
+	    </script>
+	    <script>
+	    $('#myTab a').click(function (e) {
+		  e.preventDefault()
+		  $(this).tab('show')
+		})
+	    </script>
+
+	</head>
+	<body ng-app="homelessProfile">
+		<div class="content-section-b" id="about">
+	        <div class="container" ng-controller="Controller">
+	            <div class="row">
+	                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+	                	<div class="col-lg-12 personInfo">
+	                		<h2>{{person.name}}</h2>
+	                		<img ng-src="{{person.pictureUrl}}" class="img-responsive img-thumbnail">
+	                	</div>
+	                	<div class="col-lg-12">
+	                		<h4>Daily Goals</h4>
+	                		<div class="progress">
+							  <div class="progress-bar" role="progressbar" aria-valuenow="{{person.dailyNeeds.food.current}}" aria-valuemin="0" aria-valuemax="{{person.dailyNeeds.food.total}}" style="width: {{(person.dailyNeeds.food.current / person.dailyNeeds.food.total) * 100 | number: 0}}%">
+							    {{(person.dailyNeeds.food.current / person.dailyNeeds.food.total) * 100 | number: 0}}%
+							  </div>
+							</div>
+							<div class="progress">
+							  <div class="progress-bar" role="progressbar" aria-valuenow="{{person.dailyNeeds.clothing.current}}" aria-valuemin="0" aria-valuemax="{{person.dailyNeeds.clothing.total}}" style="width: {{(person.dailyNeeds.clothing.current / person.dailyNeeds.clothing.total) * 100 | number: 0}}%">
+							    {{(person.dailyNeeds.clothing.current / person.dailyNeeds.clothing.total) * 100 | number: 0}}%
+							  </div>
+							</div>
+							<div class="progress">
+							  <div class="progress-bar" role="progressbar" aria-valuenow="{{person.dailyNeeds.shelter.current}}" aria-valuemin="0" aria-valuemax="{{person.dailyNeeds.shelter.total}}" style="width: {{(person.dailyNeeds.shelter.current / person.dailyNeeds.shelter.total) * 100 | number: 0}}%">
+							    {{(person.dailyNeeds.shelter.current / person.dailyNeeds.shelter.total) * 100 | number: 0}}% 
+							  </div>
+							</div>
+	                	</div>
+	                </div>
+	                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+	                	<ul id="myTab" class="nav nav-tabs" role="tablist">
+					      <li class="active"><a href="#goals" role="tab" data-toggle="tab">Goals</a></li>
+					      <li><a href="#bio" role="tab" data-toggle="tab">Bio</a></li>
+					      <li><a href="#supporters" role="tab" data-toggle="tab">Supporters</a></li>
+					    </ul>
+					    <div id="myTabContent" class="tab-content">
+					    	<br />
+					      <div class="tab-pane fade in active" id="goals">
+					        <div class="panel panel-default" ng-repeat="goal in person.goals">
+							  <!-- Default panel contents -->
+							  <div class="panel-heading">{{goal.title}}</div>
+							  <div class="panel-body">
+							    <p>{{goal.description}}</p>
+							  </div>
+
+							  <!-- List group -->
+							  <ul class="list-group">
+							  	<li class="list-group-item"></li>
+							    <li class="list-group-item" ng-repeat="subgoal in goal.subgoals">{{subgoal.subgoaltitle}}</li>
+							  </ul>
+							</div>
+					      </div>
+					      <div class="tab-pane fade" id="bio">
+					        {{person.bio}}
+					      </div>
+					      <div class="tab-pane fade" id="supporters">
+					        <ul class="phones">
+					          <li ng-repeat="supporter in person.supporters">
+					            {{supporter.name}}
+					            <p>{{supporter.amount}}</p>
+					          </li>
+					        </ul>
+					      </div>
+					    </div>
+	                </div> 
+	            </div>
+
+	        </div>
+	        <!-- /.container -->
+    	</div>
+
+		<!-- JavaScript -->
+	    <script src="/assets/js/jquery-1.10.2.js"></script>
+	    <script src="/assets/js/bootstrap.min.js"></script>
+	    <script src="/assets/js/bootstrapValidator.min.js"> </script>
+	    <script src="/assets/js/validation.js"> </script>
+	    <script src="/assets/js/forms.js"> </script>
+	</body>
+</html>

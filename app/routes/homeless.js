@@ -1,4 +1,6 @@
 var HomelessModel = require('../models/homeless');
+var fs = require('fs');
+
 module.exports = function(app){
 	
 	// get all the homeless people
@@ -26,11 +28,25 @@ module.exports = function(app){
 	//create a new homeless person
 	app.post('/api/homeless/create', function(req, res){
 		var data = req.body;
+		console.log(data);
 		var homeless = new HomelessModel(data);
 		homeless.save(function(err, person){
 			if(err)
 				res.send(err);
 			res.json(person);
+		});
+	});
+
+	app.post('/api/homeless/uploadImage', function(req, res){
+		var id = req.body.id;
+		console.log(id);
+		fs.readFile(req.files.file.path, function (err, data) {
+			var newPath = req.files.file.path.substring(6);
+		    HomelessModel.findByIdAndUpdate(id, {pictureUrl: newPath}, function(err, homeless){
+				if(err)
+					res.send(err);
+				res.json(homeless);
+			});
 		});
 	});
 

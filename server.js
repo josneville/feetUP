@@ -2,7 +2,8 @@ var express 	= require('express');
 var app 		= express();
 var mongoose 	= require('mongoose');
 var morgan 		= require('morgan');
-var bodyParser 	= require('body-parser');
+var bodyParser  = require('body-parser'); 
+var multer 		= require('multer');
 var braintree 	= require('braintree');
 
 var database = require('./config/database');
@@ -21,8 +22,8 @@ if ('development' == env){
 }
 
 app.use(express.static(__dirname + '/public'));
+app.use(multer({ dest: './public/uploads/'}));
 app.use(bodyParser());
-
 require('./app/routes/index.js')(app);
 require('./app/routes/homeless.js')(app);
 require('./app/routes/braintree.js')(app, gateway);
