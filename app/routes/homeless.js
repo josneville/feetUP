@@ -9,7 +9,7 @@ module.exports = function(app){
 			if(err)
 				res.send(err);
 			
-			
+
 
 			res.json(homeless); // return all the homeless people as JSON
 		});
@@ -124,7 +124,7 @@ module.exports = function(app){
 			},
 			{
 				title : "get skinny",
-				description : "Anorexia bitch",
+				description : "what what",
 				subgoals:
 					[
 						{
