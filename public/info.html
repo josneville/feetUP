@@ -6,7 +6,7 @@
 		<link rel = "stylesheet" type = "text/css" href = "assets/css/style.css"/>
 		<!--Scripts--> 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+		<script src="assets/js/angular.min.js"></script>
 		<script src="assets/js/controllers.js"></script>
 
 	</head> 
@@ -43,7 +43,7 @@
 
 		<script> 
 			$(document).ready(function(){
-				$('.thumbnail').hide(); //show only first three elements
+				$('.thumbnail:gt(2)').hide(); //show only first three elements
    				$('.view').click(function(){
         			$('.thumbnail:not(:visible):lt(3)').fadeIn("slow");
         			if ($('.thumbnail:not(:visible)').length == 0){
@@ -52,7 +52,7 @@
         		}); 
         	});
 
-			$('#search-input').keyup(function() {
+			/*$('#search-input').keyup(function() {
     			
     			if($(this).val().length > 0){
         			$(this).parent().animate({"margin-bottom": "20px"}, 1000, function(){});
@@ -63,6 +63,7 @@
    					$('.view').animate({"margin-bottom" : "0px"}, 1000, function(){}); 
    				}
 			});
+			*/
 
 		</script>
 	</body> 
