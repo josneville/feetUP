@@ -24,25 +24,32 @@ module.exports = function(app){
 	app.post('/api/homeless/create', function(req, res){
 		var data = req.body;
 		var homeless = new HomelessModel(data);
-		homeless.save(function(err){
+		homeless.save(function(err, person){
 			if(err)
 				res.send(err);
+			res.json(person);
 		});
 	});
 
 	// update a homeless person
 	app.post('/api/homeless/update', function(req, res){
 		var data = req.body;
-		HomelessModel.findByIdAndUpdate(req.body.homeless_id, data, function(err){
+		HomelessModel.findByIdAndUpdate(req.body.homeless_id, data, function(err, homeless){
 			if(err)
 				res.send(err);
+			res.json(homeless);
 		});
 	});
 
-	app.delete('/api/homeless/delete', function(req, res){
-		HomelessModel.findByIdAndRemove(req.body.homeless_id, function(err){
+	app.post('/api/homeless/delete', function(req, res){
+		// HomelessModel.findByIdAndRemove(req.body.homeless_id, function(err){
+		// 	if(err)
+		// 		res.send(err);
+		// });
+		HomelessModel.remove({ _id : req.body.homeless_id }, function(err, homeless){
 			if(err)
 				res.send(err);
+			res.json(homeless);
 		});
 	});
 
