@@ -20,7 +20,7 @@ module.exports = function(app, gateway){
 			if(err)
 				res.send(err);
 			bt_token = user.braintree_token;
-			res.send(200);
+			//res.send(200);
 		});
 
 		var card;
@@ -28,7 +28,7 @@ module.exports = function(app, gateway){
 			if(err)
 				res.send(err);
 			card = creditCard.default;
-			res.send(200);
+			//res.send(200);
 		});
 
 	  var saleRequest = {
@@ -75,10 +75,10 @@ module.exports = function(app, gateway){
 	      user.save(function(err){
 	      		if(err)
 	      			res.send(err);
-	      		res.send("<h1>Customer created with name: " + result.customer.firstName + " " + result.customer.lastName + "</h1>");
+	      		res.send(200);
 	      });
 	    } else {
-	      res.send("<h1>Error: " + result.message + "</h1>");
+	      res.send(400);
 	    }
 	  });
 	});
