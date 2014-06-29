@@ -16,33 +16,78 @@
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <!-- Page Specific CSS -->
     <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
+    <script src="/assets/js/angular-file-upload-shim.js"></script> 
     <script type="text/javascript" src="/assets/js/angular.min.js"></script>
+    <script src="/assets/js/angular-file-upload.js"></script> 
     <script type="text/javascript">
-      angular.module('homelessTable', [])
-      .controller('Controller', ['$scope', '$http', '$window', function($scope, $http, $window) {
-        refreshData();
-        function refreshData(){
-          $http({
-              url: "/api/homeless/all",
-              method: "GET"
-          }).success(function (data, status, headers, config) {
-              $scope.homelessData = data; 
-          }).error(function (data, status, headers, config) {
-              $scope.status = status;
+      angular.module('homelessTable', ['angularFileUpload'])
+      .controller('Controller', ['$scope', '$http', '$window', '$upload', '$location', function($scope, $http, $window, $upload, $location) {
+        var searchObject = $location.search();
+        $http({
+          url: '/api/homeless/find',
+          method: "POST",
+          data: {homeless_id: searchObject.id}
+        }).success(function(data, status, headers, config){
+          $scope.data = data;
+          $scope.goals = data.goals;
+        });
+        $scope.image = "";
+        $scope.data = {};
+        $scope.onFileSelect = function($files){
+          $scope.image = $files[0];
+        }
+        $scope.showAddSubgoal = function(parent_id, id){
+          return id ==  $scope.goals[parent_id].subgoals.length - 1;
+        }
+        $scope.addNewSubgoal = function(parent_id){
+          $scope.goals[parent_id].subgoals.push({
+            subgoaltitle: '',
+            current: 0,
+            total: '',
           });
         }
-        $scope.deletePerson = function(person_id){
-          $http({
-              url: "/api/homeless/delete",
-              method: "POST",
-              data: {homeless_id : person_id}
-          }).success(function (data, status, headers, config) {
-              refreshData();
-          }).error(function (data, status, headers, config) {
-              $scope.status = status;
+        $scope.submitForm = function(){
+          $scope.data.goals = $scope.goals;
+          $scope.data.dailyNeeds.food.current = 0;
+          $scope.data.dailyNeeds.clothing.current = 0;
+          $scope.data.dailyNeeds.shelter.current = 0;
+          var finalData = $scope.data;
+          if ($scope.image != null){
+            var $file = $scope.image;
+          }
+      
+          $http.post('/api/homeless/update', finalData, {
+          }).success(function(data, status, headers, config){
+            $window.alert(JSON.stringify(data));
+            if ($scope.image != null){
+              $upload.upload({
+                url: '/api/homeless/uploadImage', //upload.php script, node.js route, or servlet url,
+                method: "POST",
+                data: {id: data._id},
+                file: $file
+              }).success(function(data, status, headers, config) {
+                $window.alert(JSON.stringify(data));
+              });
+            }
+          });
+
+          
+        }
+        $scope.showAddGoal = function(id){
+          return id ==  $scope.goals.length - 1;
+        }
+        $scope.addNewGoal = function(){
+          $scope.goals.push({
+          title: '',
+          description: '',
+          subgoals: [{
+              subgoaltitle: '',
+              current: 0,
+              total: '',
+            }]
           });
         }
-      }])
+      }]);
     </script>
 
   </head>
@@ -67,8 +112,8 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav side-nav">
-            <li class="active"><a href="index.html"><i class="fa fa-table"></i> All People</a></li>
-            <li><a href="charts.html"><i class="fa fa-pencil"></i> Insert New</a></li>
+            <li><a href="index.html"><i class="fa fa-table"></i> All People</a></li>
+            <li class="active"><a href="insert.html"><i class="fa fa-pencil"></i> Insert New</a></li>
             
           </ul>
 
@@ -88,7 +133,89 @@
       </nav>
 
       <div id="page-wrapper" ng-controller="Controller">
-        
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="data.name" id="name" name="name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="imageUpload" class="col-sm-2 control-label">Image Upload</label>
+            <div class="col-sm-10">
+              <input type="file" name="file" class="form-control" ng-file-select="onFileSelect($files)" id="imageUpload" name="pictureUrl">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="bio" class="col-sm-2 control-label">Biography</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" rows="5" ng-model="data.bio"name="bio" >
+              </textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="food" class="col-sm-2 control-label">Food Amount</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="data.dailyNeeds.food.total" name="food">
+              </input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="clothes" class="col-sm-2 control-label">Clothes Amount</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="data.dailyNeeds.clothes.total" name="clothes">
+              </input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="shelter" class="col-sm-2 control-label">Shelter Amount</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="data.dailyNeeds.shelter.total" name="shelter">
+              </input>
+            </div>
+          </div>
+          <div class="form-group panel panel-default" data-ng-repeat="goal in goals">
+            <div class="panel-heading">Goal {{$index + 1}}</div>
+            <div class="panel-body">
+              <label for="goals" class="col-sm-2 control-label">Goal Title</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="goals" ng-model="goal.title">
+                </input>
+              </div>
+              <br />
+              <br />
+              <label for="goalDescription" class="col-sm-2 control-label">Goal Description</label>
+              <div class="col-sm-10" >
+                <textarea type="text" rows=5 class="form-control" name="goalDescription" ng-model="goal.description">
+                </textarea>
+              </div>
+          </div>
+          <div class="form-group panel panel-default" style="width: 95%; margin: 0px auto; margin-top: 10px;" data-ng-repeat="subgoal in goal.subgoals">
+            <div class="panel-heading" >Subgoal {{$index + 1}}</div>
+            <div class="panel-body">
+              <label for="subgoals" class="col-sm-2 control-label">Subgoal Title</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="subgoals" ng-model="subgoal.subgoaltitle">
+                </input>
+              </div>
+              <br />
+              <br />
+              <label for="subgoalTotal" class="col-sm-2 control-label">Subgoal Total</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="subgoalTotal" ng-model="subgoal.total">
+                </input>
+              </div>
+              <br />
+              <br />
+              <button type="button" class="btn btn-default" ng-show="showAddSubgoal($parent.$index, $index)" ng-click="addNewSubgoal($parent.$index)">Add another subgoal</button>
+            </div>
+          </div>
+          <br />
+          <button type="button" class="btn btn-default" ng-show="showAddGoal($index)" ng-click="addNewGoal()" style="margin-left: 10px; margin-bottom: 10px;">Add another goal</button>
+          <br />
+        </div>
+        <button type="submit" class="btn btn-default btn-primary" ng-click="submitForm()">Submit</button>
+      </form>
       </div><!-- /#page-wrapper -->
 
     </div><!-- /#wrapper -->

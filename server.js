@@ -28,5 +28,5 @@ require('./app/routes/index.js')(app);
 require('./app/routes/homeless.js')(app);
 require('./app/routes/braintree.js')(app, gateway);
 
-app.listen(3000);
+app.listen(3000, "127.0.0.1");
 console.log("App is running on port 3000");
