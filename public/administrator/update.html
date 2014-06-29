@@ -22,14 +22,17 @@
     <script type="text/javascript">
       angular.module('homelessTable', ['angularFileUpload'])
       .controller('Controller', ['$scope', '$http', '$window', '$upload', '$location', function($scope, $http, $window, $upload, $location) {
-        var searchObject = $location.search();
+        $scope.searchObject = $location.search();
         $http({
           url: '/api/homeless/find',
           method: "POST",
-          data: {homeless_id: searchObject.id}
+          data: {homeless_id: $scope.searchObject.id}
         }).success(function(data, status, headers, config){
           $scope.data = data;
           $scope.goals = data.goals;
+        }).error(function(data, status, headers, config){
+          $scope.data = {};
+          $scope.goals = {};
         });
         $scope.image = "";
         $scope.data = {};
@@ -47,15 +50,17 @@
           });
         }
         $scope.submitForm = function(){
+          
           $scope.data.goals = $scope.goals;
           $scope.data.dailyNeeds.food.current = 0;
           $scope.data.dailyNeeds.clothing.current = 0;
           $scope.data.dailyNeeds.shelter.current = 0;
+
           var finalData = $scope.data;
           if ($scope.image != null){
             var $file = $scope.image;
           }
-      
+          finalData.homeless_id = $scope.searchObject.id;
           $http.post('/api/homeless/update', finalData, {
           }).success(function(data, status, headers, config){
             $window.alert(JSON.stringify(data));
@@ -69,6 +74,7 @@
                 $window.alert(JSON.stringify(data));
               });
             }
+          }).error(function(data, status, headers, config){
           });
 
           
@@ -161,9 +167,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="clothes" class="col-sm-2 control-label">Clothes Amount</label>
+            <label for="clothing" class="col-sm-2 control-label">Clothing Amount</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" ng-model="data.dailyNeeds.clothes.total" name="clothes">
+              <input type="text" class="form-control" ng-model="data.dailyNeeds.clothing.total" name="clothing">
               </input>
             </div>
           </div>

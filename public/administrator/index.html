@@ -103,7 +103,7 @@
                   <tr ng-repeat="person in homelessData">
                     <td>/{{person.pictureUrl}}</td>
                     <td>{{person.name}}</td>
-                    <td>{{person.bio}}</td>
+                    <td>{{person.bio | limitTo:50}}</td>
                     <td><a ng-href="/administrator/update.html#?id={{person._id}}">Update</a></td>
                     <td><a ng-click="deletePerson(person._id)" style="cursor: pointer">Delete</a></td>
                   </tr>
