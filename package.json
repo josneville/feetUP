@@ -1,6 +1,7 @@
 {
   "name": "feetUp",
   "version": "0.0.0",
+  "private": true,
   "description": "A platform to donate to homeless poeple",
   "main": "server.js",
   "scripts": {
@@ -20,6 +21,8 @@
     "express"    : "~4.3.2",
     "mongoose"   : "3.8.x",
     "morgan"	 : "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "ejs" : "*",
+    "braintree": "*"
 	}
 }

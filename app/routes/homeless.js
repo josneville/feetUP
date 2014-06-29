@@ -6,6 +6,9 @@ module.exports = function(app){
 		HomelessModel.find(null, 'name pictureUrl bio', function(err, homeless){
 			if(err)
 				res.send(err);
+			
+			
+
 			res.json(homeless); // return all the homeless people as JSON
 		});
 	});
@@ -41,11 +44,9 @@ module.exports = function(app){
 		});
 	});
 
+	// delete a homeless person
 	app.post('/api/homeless/delete', function(req, res){
-		// HomelessModel.findByIdAndRemove(req.body.homeless_id, function(err){
-		// 	if(err)
-		// 		res.send(err);
-		// });
+
 		HomelessModel.remove({ _id : req.body.homeless_id }, function(err, homeless){
 			if(err)
 				res.send(err);
