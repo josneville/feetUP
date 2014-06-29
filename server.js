@@ -16,6 +16,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser());
 
 require('./app/routes/index.js')(app);
+require('./app/routes/homeless.js')(app);
 
 app.listen(3000);
 console.log("App is running on port 3000");

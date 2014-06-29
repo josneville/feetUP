@@ -1,3 +1,3 @@
 module.exports = {
-	url : 'mongodb://localhost/feetup'
+	url : 'mongodb://localhost/feetup' // if feetup doesn't work change it to feetUP
 };
