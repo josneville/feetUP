@@ -1,11 +1,6 @@
 var UserModel = require('../models/user');
 module.exports = function(app, gateway){
 
-	// route to show payment form. 
-	app.get("/api/pay", function (req, res) {
-	   //res.render("braintree.ejs");
-	});
-
 	app.post("/api/has_account", function (req, res){
 		UserModel.find(req.body.fb_id, function (err, user){
 			if(err)
@@ -22,12 +17,18 @@ module.exports = function(app, gateway){
 
 		var bt_token = "";
 		UserModel.findById(req.body.fb_id, function (err, user){
+			if(err)
+				res.send(err);
 			bt_token = user.braintree_token;
+			res.send(200);
 		});
 
 		var card;
 		gateway.creditCard.find(bt_token, function (err, creditCard){
+			if(err)
+				res.send(err);
 			card = creditCard.default;
+			res.send(200);
 		});
 
 	  var saleRequest = {
