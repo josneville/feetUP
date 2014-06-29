@@ -3,7 +3,7 @@ module.exports = function(app){
 	
 	// get all the homeless people
 	app.get('/api/homeless/all', function(req, res){
-		HomelessModel.find(function(err, homeless){
+		HomelessModel.find(null, 'name pictureUrl bio', function(err, homeless){
 			if(err)
 				res.send(err);
 			res.json(homeless); // return all the homeless people as JSON
