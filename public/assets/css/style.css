@@ -1,0 +1,54 @@
+.phones {
+   list-style: none;
+}
+ 
+ .thumb {
+   float: left;
+   margin: -0.5em 1em 1.5em 0;
+   padding-bottom: 1em;
+   height: 100px;
+   width: 100px;
+}
+ 
+ .phones li {
+  
+  
+  padding-top: 15px;
+  display:inline-block;
+}
+
+.thumbnail{
+	width: 30%;
+	display:inline-block;
+	vertical-align: top;
+}
+
+.view{
+	text-align: center;
+	clear:both;
+}
+
+.view:hover{
+	cursor:pointer;
+};
+
+.sub-container{
+	margin:0px auto;
+}
+
+.search{
+	width: 50%;
+	margin-right: 20%;
+	margin-left: 20%;
+}
+
+#sort{
+	margin-top: 15px;
+	background-color: "red";
+}
+
+.container-fluid{
+	margin-top: 10%;
+	margin-bottom:10%;
+}
+
