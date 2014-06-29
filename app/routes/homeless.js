@@ -39,6 +39,13 @@ module.exports = function(app){
 		});
 	});
 
+	app.delete('/api/homeless/delete', function(req, res){
+		HomelessModel.findByIdAndRemove(req.body.homeless_id, function(err){
+			if(err)
+				res.send(err);
+		});
+	});
+
 	// data for testing purposes
 	app.get('/api/test_homeless', function(req, res){
 
