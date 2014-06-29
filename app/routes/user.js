@@ -51,7 +51,7 @@ module.exports = function(app, gateway){
 	// creates a user with payment info on braintree payment portal and stores it
 	app.post("/api/create_user", function (req, res) {
 		console.log(req.body);
-	  var customerRequest = {
+	  	var customerRequest = {
 	    firstName: req.body.first_name,
 	    lastName: req.body.last_name,
 	    creditCard: {
