@@ -26,7 +26,7 @@ app.use(multer({ dest: './public/uploads/'}));
 app.use(bodyParser());
 require('./app/routes/index.js')(app);
 require('./app/routes/homeless.js')(app);
-require('./app/routes/braintree.js')(app, gateway);
+require('./app/routes/user.js')(app, gateway);
 
 app.listen(3000);
 console.log("App is running on port 3000");
