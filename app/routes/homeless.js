@@ -76,6 +76,7 @@ module.exports = function(app){
 		var goalsArray = [
 			{
 				title : "get fat",
+				description : "I wanna get swole",
 				subgoals:
 					[
 						{
@@ -92,6 +93,7 @@ module.exports = function(app){
 			},
 			{
 				title : "get skinny",
+				description : "Anorexia bitch",
 				subgoals:
 					[
 						{

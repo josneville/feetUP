@@ -40,6 +40,7 @@ var HomelessSchema = new Schema(
 	[
 		{
 			title : String,
+			description : String,
 			subgoals:
 				[
 					{
