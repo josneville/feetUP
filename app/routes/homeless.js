@@ -8,7 +8,7 @@ module.exports = function(app){
 		HomelessModel.find(null, 'name pictureUrl bio', function(err, homeless){
 			if(err)
 				res.send(err);
-			
+			// homeless returns array json of data
 			res.json(homeless); // return all the homeless people as JSON
 		});
 	});

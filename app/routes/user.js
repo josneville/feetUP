@@ -5,7 +5,7 @@ module.exports = function(app, gateway){
 		UserModel.find(req.body.fb_id, function (err, user){
 			if(err)
 				res.send(err);
-			if(user.braintree_token)
+			if(user.braintree_token) // EXAMPLE OF ACCESSING JSON OBJ ELEM TO MODIFY
 				res.send(200);
 			else
 				res.send(400);
