@@ -9,8 +9,6 @@ module.exports = function(app){
 			if(err)
 				res.send(err);
 			
-
-
 			res.json(homeless); // return all the homeless people as JSON
 		});
 	});

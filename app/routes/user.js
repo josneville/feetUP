@@ -3,15 +3,37 @@ module.exports = function(app, gateway){
 
 	// route to show payment form. 
 	app.get("/api/pay", function (req, res) {
-	  // res.render("braintree.ejs");
+	   //res.render("braintree.ejs");
+	});
+
+	app.post("/api/has_account", function (req, res){
+		UserModel.find(req.body.fb_id, function (err, user){
+			if(err)
+				res.send(err);
+			if(user.braintree_token)
+				res.send(200);
+			else
+				res.send(400);
+		});
 	});
 
 	// does a transaction based on customer id
-	app.post("/create_transaction", function (req, res) {
+	app.post("/api/do_transaction", function (req, res) {
+
+		var bt_token = "";
+		UserModel.findById(req.body.fb_id, function (err, user){
+			bt_token = user.braintree_token;
+		});
+
+		var card;
+		gateway.creditCard.find(bt_token, function (err, creditCard){
+			card = creditCard.default;
+		});
+
 	  var saleRequest = {
-	    amount: req.body.amount,
-	    ////////========== do brain tree token here
-	    options: {
+	    amount : req.body.amount,
+	    creditCard : card,
+	    options : {
 	      submitForSettlement: true
 	    }
 	  };
@@ -26,7 +48,7 @@ module.exports = function(app, gateway){
 	});
 
 	// creates a user with payment info on braintree payment portal and stores it
-	app.post("/create_customer", function (req, res) {
+	app.post("/api/create_user", function (req, res) {
 		console.log(req.body);
 	  var customerRequest = {
 	    firstName: req.body.first_name,
